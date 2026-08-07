@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 01 · Extremely Large Hero Image — Performance Learning Lab</title>
+<meta name="description" content="Orbit Studio landing page, intentionally broken to demonstrate a catastrophic Largest Contentful Paint caused by an oversized, unoptimized hero image.">
+
+<!--
+  ============================================================================
+  LESSON 01 — EXTREMELY LARGE HERO IMAGE
+  Target: destroy Largest Contentful Paint (and drag down FCP / Speed Index).
+
+  WHAT'S INTENTIONALLY BROKEN (see the single <img> tag flagged below):
+    - hero-image.jpg is ~9.6MB at 4200x2800px, saved at very high JPEG
+      quality with 4:4:4 chroma subsampling (no compression pass).
+    - It is plain JPEG, not WebP/AVIF.
+    - It has no width/height attributes, so the browser can't reserve
+      space for it ahead of time.
+    - It is not preloaded and has no fetchpriority="high".
+    - There is no responsive <picture>/srcset — every device downloads
+      the full 9.6MB file, phone or desktop.
+    - It loads exactly like any other <img> — no special treatment at all,
+      which is precisely why it becomes the page's worst bottleneck.
+
+  Expected Lighthouse/PSI warnings:
+    - Largest Contentful Paint (very poor)
+    - Properly size images
+    - Efficiently encode images
+    - Serve images in next-gen formats
+    - Improve image delivery
+  ============================================================================
+-->
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><span class="dot"></span> PERFORMANCE LEARNING LAB</a>
+    <div class="nav-links">
+      <a href="../index.html">All lessons</a>
+      <a href="#gallery">Work</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="lesson-badge">
+      <svg class="ring" viewBox="0 0 36 36">
+        <circle cx="18" cy="18" r="15.5" fill="none" stroke="#232935" stroke-width="3"></circle>
+        <circle cx="18" cy="18" r="15.5" fill="none" stroke="#ff4e42" stroke-width="3"
+                stroke-dasharray="97.4" stroke-dashoffset="73" stroke-linecap="round"
+                transform="rotate(-90 18 18)"></circle>
+      </svg>
+      LESSON 01
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Lesson 01 · Largest Contentful Paint</span>
+      <h1>This hero image weighs more than the rest of the site combined.</h1>
+      <p class="lede">
+        Orbit Studio is a fictional design agency landing page. Its hero photo
+        is a 4200×2800, ~9.6MB JPEG loaded with no compression, no dimensions,
+        and no priority hints — the single worst thing you can put above the fold.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#note">See what's broken</a>
+        <a class="btn btn-secondary" href="../index.html">Back to all lessons</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-image-card">
+        <!-- ====================================================================
+             INTENTIONAL PERFORMANCE ISSUE — LESSON 01 STARTS HERE
+             This <img> is deliberately loaded with zero optimization:
+             no width/height, no loading/fetchpriority attributes, no
+             preload, no srcset, plain baseline-quality-100 JPEG.
+             This is the element Lighthouse will report as the LCP node.
+        ==================================================================== -->
+        <img src="hero-image.jpg" alt="Wide shot of an abstract studio interior with warm gradient lighting">
+        <!-- INTENTIONAL PERFORMANCE ISSUE — LESSON 01 ENDS HERE ============ -->
+      </div>
+      <div class="gauge-float">
+        <svg class="ring" viewBox="0 0 36 36" width="34" height="34">
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="#232935" stroke-width="3"></circle>
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="#ff4e42" stroke-width="3"
+                  stroke-dasharray="97.4" stroke-dashoffset="83" stroke-linecap="round"
+                  transform="rotate(-90 18 18)"></circle>
+        </svg>
+        <span class="label">Expected Perf score<b>0–25 / 100</b></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="lesson-note" id="note">
+    <div class="box">
+      <span class="icon">i</span>
+      <div>
+        <h3>Why this page scores so badly</h3>
+        <p>
+          Open DevTools → Network, throttle to "Fast 3G" or "Slow 4G", and reload.
+          Watch <code>hero-image.jpg</code> dominate the waterfall — it alone can take
+          longer to arrive than an entire well-built page. Then run Lighthouse and
+          check the LCP element: it will point straight at this image. Nothing else
+          on this page is intentionally broken — compare it to a later lesson to see
+          how isolated the fix would be.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section section-border">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">What we do</span>
+      <h2>Three disciplines, one small studio.</h2>
+      <p>Orbit Studio partners with early-stage teams on brand, motion, and web — the usual placeholder copy a real client landing page would carry.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="icon-tile" style="background:var(--red-dim)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 6h16M4 18h10" stroke="#ff4e42" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Brand systems</h3>
+        <p>Identity, type systems, and guidelines built to survive contact with a real product team.</p>
+      </div>
+      <div class="card">
+        <div class="icon-tile" style="background:var(--amber-dim)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#ffa412" stroke-width="2"/></svg>
+        </div>
+        <h3>Motion &amp; film</h3>
+        <p>Short-form brand films and product motion, shot and cut in-house.</p>
+      </div>
+      <div class="card">
+        <div class="icon-tile" style="background:var(--green-dim)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="#0cce6b" stroke-width="2"/></svg>
+        </div>
+        <h3>Web &amp; product</h3>
+        <p>Marketing sites and product surfaces — ideally without a 9.6MB hero image.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-border">
+  <div class="wrap">
+    <div class="testimonial">
+      <div class="avatar"></div>
+      <div>
+        <blockquote>"Orbit rebuilt our entire site in six weeks. The design was great. The hero image was not — but that's a different lesson."</blockquote>
+        <cite>— Placeholder Client, VP Marketing (fictional)</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="gallery">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Selected work</span>
+      <h2>A small, deliberately lightweight gallery.</h2>
+      <p>These four tiles are inline SVG, not photos — on purpose, so the only oversized asset on this page is the one this lesson is about.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-tile">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect width="100" height="100" fill="#1a2029"/><path d="M0 70 L30 40 L55 60 L100 20 V100 H0 Z" fill="#4a201d"/></svg>
+      </div>
+      <div class="gallery-tile">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect width="100" height="100" fill="#12161f"/><circle cx="50" cy="45" r="26" fill="#4a3610"/></svg>
+      </div>
+      <div class="gallery-tile">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect width="100" height="100" fill="#1a2029"/><rect x="20" y="20" width="60" height="60" fill="#0f3324"/></svg>
+      </div>
+      <div class="gallery-tile">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect width="100" height="100" fill="#12161f"/><polygon points="50,15 85,85 15,85" fill="#232935"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="brand"><span class="dot"></span> PERFORMANCE LEARNING LAB</a>
+        <p>A hands-on curriculum of intentionally broken pages, one Core Web Vital at a time.</p>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <ul>
+          <li><a href="#">Work</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">PageSpeed Insights</a></li>
+          <li><a href="#">web.dev/vitals</a></li>
+          <li><a href="#">DevTools guide</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Lesson</h4>
+        <ul>
+          <li><a href="../index.html">All lessons</a></li>
+          <li><a href="#note">What's broken</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Performance Learning Lab · fictional studio, real bug</span>
+      <span>lesson-01-large-lcp</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

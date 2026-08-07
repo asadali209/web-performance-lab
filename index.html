@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Learning Lab</title>
+<meta name="description" content="A hands-on curriculum of intentionally broken static pages, one Core Web Vital or Lighthouse warning at a time.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand"><span class="dot"></span> PERFORMANCE LEARNING LAB</a>
+    <div class="nav-links">
+      <a href="#lessons">Lessons</a>
+      <a href="#about">How it works</a>
+    </div>
+  </div>
+</nav>
+
+<header class="home-hero">
+  <div class="wrap">
+    <span class="eyebrow">Static HTML · CSS · JS only — no framework, no backend</span>
+    <h1>One page. One broken metric. Every time.</h1>
+    <p class="lede">
+      Every lesson below is a self-contained landing page with identical design —
+      nav, hero, cards, gallery, footer — and exactly one deliberately exaggerated
+      performance problem. Run Lighthouse or PageSpeed Insights on each one, watch
+      the warnings appear, then go read the code to see precisely what caused them.
+    </p>
+    <p class="lede">
+      Building past the original 20 into an expanded curriculum that also covers
+      what Lighthouse doesn't score directly — things you only see in Chrome
+      DevTools' Performance panel: loading priority, the rendering pipeline,
+      GPU vs. CPU work, long tasks, memory leaks, caching, compression, and more.
+    </p>
+    <p class="fine">Building one lesson at a time — currently 1 of 30+ live.</p>
+  </div>
+</header>
+
+<section class="section" id="lessons">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Curriculum</span>
+      <h2>All lessons</h2>
+      <p>Locked cards are on the roadmap and will unlock as they're built. Design stays identical across every lesson — only the injected issue changes.</p>
+    </div>
+
+    <div class="lessons-grid">
+
+      <a href="lesson-01-large-lcp/index.html" class="lesson-card is-live">
+        <div class="row-top"><span class="num">01</span><span class="status-pill status-live">Live</span></div>
+        <h3>Extremely large hero image</h3>
+        <p>A ~9.6MB, unoptimized 4200×2800 JPEG loaded with no dimensions or priority hints.</p>
+        <div class="metrics"><span class="metric-tag">LCP</span><span class="metric-tag">FCP</span><span class="metric-tag">Speed Index</span></div>
+      </a>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">02</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Render-blocking CSS</h3>
+        <p>Dozens of synchronous, unminified stylesheets loaded in the head.</p>
+        <div class="metrics"><span class="metric-tag">FCP</span><span class="metric-tag">LCP</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">03</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Huge JavaScript bundle</h3>
+        <p>Large synchronous libraries and long-running work on the main thread.</p>
+        <div class="metrics"><span class="metric-tag">TBT</span><span class="metric-tag">INP</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">04</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Third-party scripts</h3>
+        <p>Simulated analytics, chat, and marketing tags firing immediately on load.</p>
+        <div class="metrics"><span class="metric-tag">TBT</span><span class="metric-tag">INP</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">05</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Layout shift</h3>
+        <p>Dimensionless images, late banners, and a popup that appears after two seconds.</p>
+        <div class="metrics"><span class="metric-tag">CLS</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">06</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Large DOM</h3>
+        <p>Thousands of deeply nested, unnecessary wrapper elements.</p>
+        <div class="metrics"><span class="metric-tag">TBT</span><span class="metric-tag">Render time</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">07</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Unused CSS</h3>
+        <p>Thousands of selectors that never match a single element on the page.</p>
+        <div class="metrics"><span class="metric-tag">Unused CSS</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">08</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Unused JavaScript</h3>
+        <p>Large utility functions and libraries downloaded but never called.</p>
+        <div class="metrics"><span class="metric-tag">Unused JS</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">09</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Fonts</h3>
+        <p>Every weight and style of several families, unsubset, no font-display.</p>
+        <div class="metrics"><span class="metric-tag">FCP</span><span class="metric-tag">LCP</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">10</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Network waterfall</h3>
+        <p>Every asset split into its own request, loaded one dependency at a time.</p>
+        <div class="metrics"><span class="metric-tag">Dependency chains</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">11</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Images everywhere</h3>
+        <p>A gallery of dozens of full-resolution photos with lazy loading disabled.</p>
+        <div class="metrics"><span class="metric-tag">Offscreen images</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">12</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Video</h3>
+        <p>An autoplaying 4K background video with no poster image.</p>
+        <div class="metrics"><span class="metric-tag">LCP</span><span class="metric-tag">Data transfer</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">13</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>CSS animations (layout properties)</h3>
+        <p>Continuous animation of width, height, top, and left instead of transform.</p>
+        <div class="metrics"><span class="metric-tag">Rendering</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">14</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Forced reflow</h3>
+        <p>Layout thrashing from reading and writing layout properties in a loop.</p>
+        <div class="metrics"><span class="metric-tag">INP</span><span class="metric-tag">Scripting</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">15</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Massive HTML</h3>
+        <p>An enormous, repetitive document with thousands of elements to parse.</p>
+        <div class="metrics"><span class="metric-tag">Parse time</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">16</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Inline CSS</h3>
+        <p>Large duplicated style blocks inlined directly into the document.</p>
+        <div class="metrics"><span class="metric-tag">HTML size</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">17</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Inline JavaScript</h3>
+        <p>Thousands of lines of script and large JSON blobs inlined in the HTML.</p>
+        <div class="metrics"><span class="metric-tag">Parse time</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">18</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Large localStorage</h3>
+        <p>Heavy synchronous reads and writes of huge values on every load.</p>
+        <div class="metrics"><span class="metric-tag">Main thread</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">19</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Canvas</h3>
+        <p>Complex canvas graphics redrawn on every single frame.</p>
+        <div class="metrics"><span class="metric-tag">CPU</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">20</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Combined worst case</h3>
+        <p>Every previous mistake stacked onto one page. Target score: 10–20.</p>
+        <div class="metrics"><span class="metric-tag">Everything</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">21</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Resource priority hints</h3>
+        <p>Misusing (and correctly using) fetchpriority, preload, prefetch, and preconnect.</p>
+        <div class="metrics"><span class="metric-tag">LCP</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">22</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>The rendering pipeline</h3>
+        <p>Style recalculation, layout, paint, and compositing, made visible in DevTools.</p>
+        <div class="metrics"><span class="metric-tag">Performance panel</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">23</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>GPU vs. CPU animation</h3>
+        <p>The same animation done two ways, one compositor-only, one main-thread-bound.</p>
+        <div class="metrics"><span class="metric-tag">Rendering</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">24</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Long tasks &amp; task splitting</h3>
+        <p>One monolithic task versus the same work chunked with yielding.</p>
+        <div class="metrics"><span class="metric-tag">INP</span><span class="metric-tag">TBT</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">25</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Memory leaks</h3>
+        <p>Detached DOM nodes and growing listeners tracked in the Memory panel.</p>
+        <div class="metrics"><span class="metric-tag">Memory panel</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">26</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Event listener overhead</h3>
+        <p>Hundreds of redundant listeners versus one delegated listener.</p>
+        <div class="metrics"><span class="metric-tag">INP</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">27</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Passive vs. non-passive listeners</h3>
+        <p>Scroll and touch handlers that block the compositor by default.</p>
+        <div class="metrics"><span class="metric-tag">Scrolling</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">28</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Bundle analysis</h3>
+        <p>Reading a real bundle breakdown to find what's actually worth cutting.</p>
+        <div class="metrics"><span class="metric-tag">Unused JS</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">29</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>HTTP caching strategy</h3>
+        <p>Cache-Control, ETags, and immutable assets, done wrong then right.</p>
+        <div class="metrics"><span class="metric-tag">Repeat visits</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">30</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Compression &amp; transfer protocol</h3>
+        <p>Brotli vs. gzip vs. none, and HTTP/2 vs HTTP/3 request behavior.</p>
+        <div class="metrics"><span class="metric-tag">Transfer size</span></div>
+      </div>
+
+      <div class="lesson-card is-locked">
+        <div class="row-top"><span class="num">31+</span><span class="status-pill status-soon">Soon</span></div>
+        <h3>Service workers, TTFB &amp; RUM</h3>
+        <p>Offline caching strategy, simulated slow server response, and lab vs. field data.</p>
+        <div class="metrics"><span class="metric-tag">TTFB</span><span class="metric-tag">RUM</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">How to use this lab</span>
+      <h2>Read the code, then run the tools</h2>
+      <p>
+        Every lesson's intentional issue is wrapped in matching HTML comments
+        marking where it starts and ends, so you can find it without guessing.
+        Deploy the folder as-is to GitHub Pages or Cloudflare Pages — there's no
+        backend and nothing to build. Run each page through Lighthouse in
+        Chrome DevTools (or PageSpeed Insights once it's public) and compare
+        the warnings you see against the metrics tag on each lesson card above.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© 2026 Performance Learning Lab · static HTML/CSS/JS, no framework, no backend</span>
+      <span>1 / 30+ lessons live</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
