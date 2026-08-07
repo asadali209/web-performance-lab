@@ -84,7 +84,162 @@
         ==================================================================== -->
         <img src="hero-image.jpg" alt="Wide shot of an abstract studio interior with warm gradient lighting">
         <!-- INTENTIONAL PERFORMANCE ISSUE — LESSON 01 ENDS HERE ============ -->
-      </div>
+
+        <!-- ====================================================================
+             HOW TO FIX LESSON 01 — read this before touching any code.
+             This is written as a sequence of concepts + exact actions, in the
+             order a real engineer would apply them. Don't skip straight to
+             the code — the "why" is what makes this transfer to real work.
+
+             BACKGROUND CONCEPT — What is LCP?
+             Largest Contentful Paint measures when the biggest visible
+             element (usually a hero image or heading) finishes rendering.
+             Chrome's thresholds: Good ≤2.5s · Needs Improvement 2.5–4s ·
+             Poor >4s. Right now this element IS the LCP node, and on a
+             throttled connection it can take 10-30+ seconds just to
+             download, before it's even decoded and painted.
+
+             ------------------------------------------------------------------
+             STEP 1 — Resize to the dimensions it's actually displayed at
+             ------------------------------------------------------------------
+             Concept: a browser has to download every byte of an image before
+             it can downscale it visually. Serving a 4200×2800 source into a
+             box that only ever renders ~700px wide (this .hero-image-card)
+             means ~90% of the downloaded pixels are thrown away.
+             Action: resize the master file down to the largest size it will
+             realistically render at, accounting for high-DPI screens
+             (roughly 2x the CSS box width, so ~1400px wide covers most
+             retina laptops/phones for this layout — not 4200px).
+             Tools (pick one): `sharp` (Node.js), Squoosh.app / Squoosh CLI,
+             or ImageMagick (`magick hero-image.jpg -resize 1400x hero.jpg`).
+
+             ------------------------------------------------------------------
+             STEP 2 — Re-encode with real compression
+             ------------------------------------------------------------------
+             Concept: JPEG quality 100 is very close to visually
+             indistinguishable from quality 75-80 for a photo like this, but
+             costs several times the file size. There are steep diminishing
+             returns above ~80.
+             Action: re-export using mozjpeg (better encoder than the
+             baseline libjpeg most tools default to) at quality 75-80, with
+             4:2:0 chroma subsampling (not 4:4:4 — that's another silent
+             size cost this file currently has). Squoosh.app's "MozJPEG"
+             tab does this with a live before/after size comparison.
+
+             ------------------------------------------------------------------
+             STEP 3 — Serve modern formats: AVIF and WebP
+             ------------------------------------------------------------------
+             Concept: AVIF and WebP are newer codecs that typically achieve
+             the same visual quality as JPEG at 30-50% (AVIF sometimes 50%+)
+             of the file size. Browser support for both is effectively
+             universal in 2026 (all major evergreen browsers), so JPEG
+             should only remain as a fallback, not the primary format.
+             Action: generate hero-image.avif and hero-image.webp alongside
+             the JPEG, then serve all three with <picture>, letting the
+             browser pick the smallest one it supports:
+
+               <picture>
+                 <source srcset="hero-image.avif" type="image/avif">
+                 <source srcset="hero-image.webp" type="image/webp">
+                 <img src="hero-image.jpg" alt="...">
+               </picture>
+
+             Tools: Squoosh.app (exports both formats from the same UI),
+             or CLI: `npx @squoosh/cli --avif auto --webp auto hero-image.jpg`
+
+             ------------------------------------------------------------------
+             STEP 4 — Add explicit width/height (or rely on aspect-ratio)
+             ------------------------------------------------------------------
+             Concept: without dimensions, the browser doesn't know how much
+             space to reserve before the image downloads, which causes
+             layout shift (a separate Core Web Vital, CLS) as content jumps
+             once the image finally arrives.
+             Action: add width and height attributes matching the image's
+             real intrinsic aspect ratio (e.g. width="1400" height="933" if
+             you resize to that), even though CSS also constrains the box
+             via aspect-ratio: 4/3 on .hero-image-card — the HTML attributes
+             are what let the browser reserve space before any CSS is even
+             parsed, so both together is the current best practice.
+
+             ------------------------------------------------------------------
+             STEP 5 — Make it genuinely responsive with srcset + sizes
+             ------------------------------------------------------------------
+             Concept: a phone on a small screen doesn't need the same pixel
+             width as a 4K monitor. srcset lets you offer several sizes and
+             sizes tells the browser which one it actually needs, before
+             downloading anything.
+             Action: generate a few widths (e.g. 480w, 800w, 1200w, 1600w)
+             per format and wire them up:
+
+               <source
+                 type="image/avif"
+                 srcset="hero-480.avif 480w, hero-800.avif 800w,
+                         hero-1200.avif 1200w, hero-1600.avif 1600w"
+                 sizes="(max-width: 900px) 100vw, 45vw">
+
+             (repeat the same srcset/sizes pattern for the webp <source> and
+             the jpg fallback <img> too)
+
+             ------------------------------------------------------------------
+             STEP 6 — Tell the browser this is the priority image
+             ------------------------------------------------------------------
+             Concept: fetchpriority="high" is a hint that tells the browser
+             "fetch this before other same-priority resources," which matters
+             because browsers otherwise apply heuristics that can delay an
+             image the parser hasn't fully "seen" yet is important.
+             Action: add fetchpriority="high" directly on the <img> tag.
+             Browser support is broad across current evergreen Chrome,
+             Edge, and Firefox; Safari added support in 17.2 — always worth
+             a quick caniuse.com check since browser support evolves.
+
+             ------------------------------------------------------------------
+             STEP 7 — Preload it from <head>
+             ------------------------------------------------------------------
+             Concept: the browser's "preload scanner" finds most resources
+             early, but explicit preload guarantees the fetch starts as soon
+             as possible, at the highest priority, before the parser even
+             reaches this part of the HTML.
+             Action: add this to <head>, matching whichever format/size the
+             browser will actually pick, so you don't accidentally
+             double-download:
+
+               <link rel="preload" as="image" href="hero-1200.avif"
+                     imagesrcset="hero-480.avif 480w, hero-800.avif 800w,
+                                  hero-1200.avif 1200w, hero-1600.avif 1600w"
+                     imagesizes="(max-width: 900px) 100vw, 45vw"
+                     fetchpriority="high">
+
+             ------------------------------------------------------------------
+             STEP 8 — Do NOT lazy-load this image
+             ------------------------------------------------------------------
+             Concept: loading="lazy" tells the browser to defer fetching
+             until the image nears the viewport — perfect for below-the-fold
+             gallery images, actively harmful on the LCP element since it
+             delays the exact thing you're trying to speed up.
+             Action: leave loading unset (eager is the default) or set
+             loading="eager" explicitly for clarity.
+
+             ------------------------------------------------------------------
+             STEP 9 — (Optional/advanced) Use an image CDN
+             ------------------------------------------------------------------
+             Concept: services like Cloudflare Images, Cloudinary, or Imgix
+             auto-negotiate format via the request's Accept header and
+             resize on the fly from one master image, so you stop hand-
+             generating every width/format combination yourself.
+             Action: not required for this lab (GitHub Pages is static
+             hosting with no image processing), but worth knowing this is
+             how most production sites solve steps 1-5 automatically.
+
+             ------------------------------------------------------------------
+             STEP 10 — Re-test and confirm
+             ------------------------------------------------------------------
+             Rerun Lighthouse. You should see: "Properly size images",
+             "Efficiently encode images", "Serve images in next-gen
+             formats", and "Improve image delivery" all pass, and LCP drop
+             from many seconds to well under 2.5s on a throttled connection.
+             Target total transferred weight for the hero image: roughly
+             under 150-200KB, ideally under 100KB for the mobile variant.
+        ==================================================================== -->
       <div class="gauge-float">
         <svg class="ring" viewBox="0 0 36 36" width="34" height="34">
           <circle cx="18" cy="18" r="15.5" fill="none" stroke="#232935" stroke-width="3"></circle>
